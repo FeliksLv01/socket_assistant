@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:socket_assistant/mixin/after_layout.dart';
 import 'package:socket_assistant/pages/home/body.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +34,18 @@ class HomePage extends StatelessWidget {
       centerTitle: true,
       leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
       title: Text(
-        '连接服务器',
+        '连接FPGA',
         style: TextStyle(color: Colors.black),
       ),
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    Future.delayed(Duration.zero, () async {
+      if (await Permission.storage.isGranted == false) {
+        await [Permission.storage].request();
+      }
+    });
   }
 }

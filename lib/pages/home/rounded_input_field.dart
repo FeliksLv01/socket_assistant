@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:socket_assistant/pages/home/text_field_container.dart';
 
 class RoundedInputField extends StatelessWidget {
-  final String hintText;
+  final String? hintText;
   final IconData icon;
-  final TextEditingController controller;
-  final void Function(String) onSubmitted;
+  final TextEditingController? controller;
+  final void Function(String)? onSubmitted;
   const RoundedInputField({
-    Key key,
+    Key? key,
     this.hintText,
     this.icon = Icons.person,
     this.controller,
@@ -16,7 +15,15 @@ class RoundedInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldContainer(
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      width: size.width * 0.8,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(29),
+      ),
       child: TextField(
         controller: controller,
         cursorColor: Colors.grey,

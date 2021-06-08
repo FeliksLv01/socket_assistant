@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sp_util/sp_util.dart';
 
 import 'pages/home/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SpUtil.getInstance();
   runApp(MyApp());
 }
 

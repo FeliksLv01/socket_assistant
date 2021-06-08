@@ -1,36 +1,67 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:socket_assistant/socket_manager.dart';
+import 'package:flutter/services.dart';
+import 'package:socket_assistant/mixin/after_layout.dart';
+import 'package:socket_assistant/utils/socket_util.dart';
+import 'package:sp_util/sp_util.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ChartPage extends StatefulWidget {
-  ChartPage({Key key}) : super(key: key);
+  ChartPage({Key? key}) : super(key: key);
 
   @override
   _ChartPageState createState() => _ChartPageState();
 }
 
-class _ChartPageState extends State<ChartPage> {
-  double angle = 0.0;
+class _ChartPageState extends State<ChartPage> with AfterLayoutMixin<ChartPage> {
+  ValueNotifier<double> _angle = ValueNotifier<double>(0.0);
+  String host = '';
+  int port = 0;
+  bool isStart = false;
 
   void onReceiver(List<int> event) {
-    angle = double.parse(utf8.decode(event));
-    print(angle);
-    setState(() {});
+    _angle.value = double.parse(utf8.decode(event));
+    print(_angle.value);
   }
 
   @override
   void initState() {
     super.initState();
-    SocketManage.mStream.listen(onReceiver);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    host = SpUtil.getString("host")!;
+    port = SpUtil.getInt("port")!;
   }
 
   @override
   void dispose() {
-    SocketManage.dispose();
+    SocketUtil.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     super.dispose();
+  }
+
+  void start() {
+    if (!isStart) {
+      isStart = true;
+      Future.delayed(Duration.zero, () async {
+        await SocketUtil.initSocket(host, port);
+        SocketUtil.mStream.listen(onReceiver);
+      });
+    }
+  }
+
+  void stop() {
+    isStart = false;
+    SocketUtil.dispose();
   }
 
   @override
@@ -39,38 +70,81 @@ class _ChartPageState extends State<ChartPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('测试', style: TextStyle(color: Colors.black)),
-        automaticallyImplyLeading: false,
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF47c7dc),
-        onPressed: () async {
-          SocketManage.dispose();
-          Navigator.pop(context);
-        },
-        child: Icon(Icons.arrow_back_ios_rounded),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              '$angle',
-              style: TextStyle(fontSize: 20),
-            ),
-            SfRadialGauge(
-              animationDuration: 250,
-              axes: <RadialAxis>[
-                RadialAxis(
-                  radiusFactor: 0.9,
-                  interval: 15,
-                  startAngle: 0,
-                  endAngle: 360,
-                  minimum: 0,
-                  maximum: 360,
-                  pointers: <GaugePointer>[NeedlePointer(value: angle)],
+            Column(
+              children: [
+                ValueListenableBuilder(
+                  valueListenable: _angle,
+                  builder: (context, value, child) => SfRadialGauge(
+                    animationDuration: 250,
+                    axes: <RadialAxis>[
+                      RadialAxis(
+                        radiusFactor: 0.9,
+                        interval: 15,
+                        startAngle: 0,
+                        endAngle: 360,
+                        minimum: 0,
+                        maximum: 360,
+                        pointers: <GaugePointer>[NeedlePointer(value: value as double)],
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
+            Column(
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 200,
+                  width: 200,
+                ),
+                Text(
+                  'CICC1255 木大木大团队',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  '某科学的声源定位识别器',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => start(),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF65B7F3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: Text('开始', style: TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () => stop(),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFF37370),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: Text('停止', style: TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
           ],
         ),
       ),
