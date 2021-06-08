@@ -66,11 +66,8 @@ class _ChartPageState extends State<ChartPage> with AfterLayoutMixin<ChartPage> 
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('测试', style: TextStyle(color: Colors.black)),
-      ),
       body: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -78,30 +75,46 @@ class _ChartPageState extends State<ChartPage> with AfterLayoutMixin<ChartPage> 
             Column(
               children: [
                 ValueListenableBuilder(
-                  valueListenable: _angle,
-                  builder: (context, value, child) => SfRadialGauge(
-                    animationDuration: 250,
-                    axes: <RadialAxis>[
-                      RadialAxis(
-                        radiusFactor: 0.9,
-                        interval: 15,
-                        startAngle: 0,
-                        endAngle: 360,
-                        minimum: 0,
-                        maximum: 360,
-                        pointers: <GaugePointer>[NeedlePointer(value: value as double)],
-                      )
-                    ],
-                  ),
-                )
+                    valueListenable: _angle,
+                    builder: (context, value, child) {
+                      double angle = value as double;
+                      return Container(
+                        width: width * 0.95,
+                        height: width * 0.95,
+                        child: SfRadialGauge(
+                          animationDuration: 250,
+                          axes: <RadialAxis>[
+                            RadialAxis(
+                                radiusFactor: 0.9,
+                                interval: 15,
+                                startAngle: 0,
+                                endAngle: 360,
+                                minimum: 0,
+                                maximum: 360,
+                                pointers: <GaugePointer>[
+                                  NeedlePointer(value: angle)
+                                ],
+                                annotations: <GaugeAnnotation>[
+                                  GaugeAnnotation(
+                                      widget: Text(
+                                        '$angle',
+                                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                                      ),
+                                      angle: 270,
+                                      positionFactor: 0.5)
+                                ])
+                          ],
+                        ),
+                      );
+                    })
               ],
             ),
             Column(
               children: [
                 Image.asset(
                   'assets/images/logo.png',
-                  height: 200,
-                  width: 200,
+                  height: width * 0.5,
+                  width: width * 0.5,
                 ),
                 Text(
                   'CICC1255 木大木大团队',
@@ -111,7 +124,7 @@ class _ChartPageState extends State<ChartPage> with AfterLayoutMixin<ChartPage> 
                   '某科学的声源定位识别器',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                SizedBox(height: 20),
+                Spacer(),
                 Row(
                   children: [
                     ElevatedButton(
@@ -143,6 +156,7 @@ class _ChartPageState extends State<ChartPage> with AfterLayoutMixin<ChartPage> 
                     ),
                   ],
                 ),
+                SizedBox(height: 40),
               ],
             )
           ],

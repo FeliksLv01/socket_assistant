@@ -21,7 +21,8 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     hostController.text = SpUtil.getString("host") ?? '';
-    portController.text = SpUtil.getInt("port").toString();
+    int port = SpUtil.getInt("port") ?? 0;
+    portController.text = port == 0 ? '' : port.toString();
   }
 
   @override
