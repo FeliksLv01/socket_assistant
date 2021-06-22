@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
       centerTitle: true,
       leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
       title: Text(
-        '连接FPGA',
+        '串口助手',
         style: TextStyle(color: Colors.black),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_assistant/pages/chart/chart_page.dart';
+import 'package:socket_assistant/pages/pwm/pwm.dart';
 import 'package:socket_assistant/utils/socket_util.dart';
 import 'package:socket_assistant/pages/home/rounded_input_field.dart';
 import 'package:sp_util/sp_util.dart';
@@ -33,12 +33,16 @@ class _BodyState extends State<Body> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Image.asset(
-              'assets/images/logo.png',
-              height: MediaQuery.of(context).size.width * 0.6,
-              width: MediaQuery.of(context).size.width * 0.6,
+            child: CircleAvatar(
+              radius: 60,
+              backgroundImage: AssetImage('assets/images/avatar.png'),
             ),
           ),
+          Text(
+            'Designed By LvYou',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          SizedBox(height: 40),
           RoundedInputField(
             icon: Icons.wifi_outlined,
             hintText: 'IP地址',
@@ -50,7 +54,7 @@ class _BodyState extends State<Body> {
             controller: portController,
           ),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           ElevatedButton(
             onPressed: () async {
@@ -61,7 +65,7 @@ class _BodyState extends State<Body> {
                 if (isOk) {
                   SpUtil.putString("host", host);
                   SpUtil.putInt("port", port);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChartPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PWMPage()));
                 } else {
                   showError(context);
                 }
