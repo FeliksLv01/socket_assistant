@@ -35,7 +35,6 @@ class _PWMPageState extends State<PWMPage> with AfterLayoutMixin<PWMPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backwardsCompatibility: false,
         title: Text('调节占空比', style: TextStyle(color: Colors.black)),
       ),
       body: Center(
