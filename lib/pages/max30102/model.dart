@@ -1,10 +1,10 @@
-class TcpModel {
+class Max30102Model {
   num? hrAvg;
   num? spo2Avg;
 
-  TcpModel({this.hrAvg, this.spo2Avg});
+  Max30102Model({this.hrAvg, this.spo2Avg});
 
-  TcpModel.fromJson(Map<String, dynamic> json) {
+  Max30102Model.fromJson(Map<String, dynamic> json) {
     hrAvg = json['hrAvg'];
     spo2Avg = json['spo2Avg'];
   }
@@ -26,8 +26,8 @@ class TcpModel {
 
   @override
   bool operator ==(dynamic other) {
-    if (other is! TcpModel) return false;
-    TcpModel temp = other;
+    if (other is! Max30102Model) return false;
+    Max30102Model temp = other;
     return (temp.hrAvg == hrAvg && temp.spo2Avg.toString() == spo2Avg.toString());
   }
 }

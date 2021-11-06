@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_assistant/pages/max30102/data_page.dart';
+import 'package:socket_assistant/pages/signal/data_page.dart';
+import 'package:socket_assistant/pages/signal/signal_chart_page.dart';
 import 'package:socket_assistant/utils/socket_util.dart';
 import 'package:socket_assistant/pages/home/rounded_input_field.dart';
 import 'package:sp_util/sp_util.dart';
@@ -35,7 +36,7 @@ class _BodyState extends State<Body> {
             padding: EdgeInsets.symmetric(vertical: 20),
             child: CircleAvatar(
               radius: 60,
-              backgroundImage: AssetImage('assets/images/avatar.png'),
+              backgroundImage: AssetImage('assets/images/icon.png'),
             ),
           ),
           // Text(
@@ -65,7 +66,7 @@ class _BodyState extends State<Body> {
                 if (isOk) {
                   SpUtil.putString("host", host);
                   SpUtil.putInt("port", port);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DataPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignalChartPage()));
                 } else {
                   showError(context);
                 }

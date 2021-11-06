@@ -2,7 +2,7 @@
     package="com.kcqnly.socket_assistant">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="socket_assistant"
+        android:label="上位机"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

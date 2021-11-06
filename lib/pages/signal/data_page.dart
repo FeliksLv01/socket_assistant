@@ -3,30 +3,30 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:socket_assistant/mixin/after_layout.dart';
-import 'package:socket_assistant/pages/max30102/model.dart';
+import 'package:socket_assistant/pages/signal/signal_model.dart';
 import 'package:socket_assistant/utils/socket_util.dart';
 import 'package:sp_util/sp_util.dart';
 
-class DataPage extends StatefulWidget {
-  DataPage({Key? key}) : super(key: key);
+class SignalPage extends StatefulWidget {
+  SignalPage({Key? key}) : super(key: key);
 
   @override
-  _DataPageState createState() => _DataPageState();
+  _SignalPageState createState() => _SignalPageState();
 }
 
-class _DataPageState extends State<DataPage> with AfterLayoutMixin<DataPage> {
-  ValueNotifier<Max30102Model> _data = ValueNotifier<Max30102Model>(Max30102Model(hrAvg: 0, spo2Avg: 0));
+class _SignalPageState extends State<SignalPage> with AfterLayoutMixin<SignalPage> {
+  ValueNotifier<SignalModel> _data = ValueNotifier<SignalModel>(SignalModel(thd: 0, v0: 0, v1: 0, v2: 0, v3: 0, v4: 0));
   String host = '';
   int port = 0;
   bool isStart = false;
 
   void onReceiver(List<int> event) {
     try {
-      var tempData = Max30102Model.fromJson(json.decode(utf8.decode(event)));
+      var tempData = SignalModel.fromJson(json.decode(utf8.decode(event)));
       var currentModel = _data.value;
       if (currentModel != tempData) {
         _data.value = tempData;
-        print(_data.value.toJson());
+        print(_data.value.toString());
       }
     } catch (e) {}
   }
@@ -75,11 +75,11 @@ class _DataPageState extends State<DataPage> with AfterLayoutMixin<DataPage> {
           child: Column(
             children: [
               Spacer(),
-              ValueListenableBuilder<Max30102Model>(
+              ValueListenableBuilder<SignalModel>(
                 valueListenable: _data,
                 builder: (context, model, _) {
                   return Text(
-                    '心率: ${model.hrAvg} \n血氧: ${model.spo2Avg}',
+                    'THD: ${model.thd} \nV0: ${model.v0}\nV1: ${model.v1}\nV2: ${model.v2}\nV3: ${model.v3}\nV4: ${model.v4}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   );
                 },
