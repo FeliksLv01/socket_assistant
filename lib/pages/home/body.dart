@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_assistant/pages/signal/data_page.dart';
+// import 'package:socket_assistant/pages/signal/data_page.dart';
 import 'package:socket_assistant/pages/signal/signal_chart_page.dart';
 import 'package:socket_assistant/utils/socket_util.dart';
 import 'package:socket_assistant/pages/home/rounded_input_field.dart';

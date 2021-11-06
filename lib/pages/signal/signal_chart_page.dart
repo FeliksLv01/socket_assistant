@@ -22,22 +22,37 @@ class _SignalChartPageState extends State<SignalChartPage> with AfterLayoutMixin
   List<SignalChartModel> _dataList = [];
   int _count = 0;
   bool canClear = true;
+  ValueNotifier<SignalModel> _data = ValueNotifier<SignalModel>(SignalModel(thd: 0, v0: 0, v1: 0, v2: 0, v3: 0, v4: 0));
 
   void onReceiver(List<int> event) {
     try {
-      var tempData = SignalChartModel.fromJson(json.decode(utf8.decode(event)));
-      if ((tempData.x ?? 0) < 10 && canClear) {
-        canClear = false;
-        _dataList.clear();
-        _count = 0;
-      } else {
-        _dataList.add(tempData);
-        _count++;
-        print(_count);
-        if (_count > 100) canClear = true;
-      }
-      if (_count % 6 == 0) {
-        setState(() {});
+      // String str = utf8.decode(event);
+      // if (!str.contains('{')) return;
+      List<String> data = utf8.decode(event).trimRight().split(' ');
+      for (var it in data) {
+        Map<String, dynamic> cur = json.decode(it);
+        if (cur.containsKey("THD")) {
+          var tempData = SignalModel.fromJson(cur);
+          var currentModel = _data.value;
+          if (currentModel != tempData) {
+            _data.value = tempData;
+            print(_data.value.toString());
+          }
+          return;
+        }
+        var tempData = SignalChartModel.fromJson(cur);
+        if ((tempData.x ?? 0) < 10 && canClear) {
+          canClear = false;
+          _dataList.clear();
+          _count = 0;
+        } else {
+          _dataList.add(tempData);
+          _count++;
+          if (_count > 100) canClear = true;
+        }
+        if (_count % 6 == 0) {
+          setState(() {});
+        }
       }
     } catch (e) {
       print(e.toString());
@@ -87,81 +102,99 @@ class _SignalChartPageState extends State<SignalChartPage> with AfterLayoutMixin
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                Container(
-                  height: width * 0.8,
-                  child: SfCartesianChart(
-                    primaryXAxis: NumericAxis(isVisible: false),
-                    series: [
-                      SplineSeries<SignalChartModel, int>(
-                        dataSource: _dataList,
-                        splineType: SplineType.monotonic,
-                        xValueMapper: (SignalChartModel sales, _) => sales.x,
-                        yValueMapper: (SignalChartModel sales, _) => sales.y,
-                      )
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    height: width * 0.72,
+                    child: SfCartesianChart(
+                      primaryXAxis: NumericAxis(isVisible: false),
+                      series: [
+                        SplineSeries<SignalChartModel, int>(
+                          dataSource: _dataList,
+                          splineType: SplineType.monotonic,
+                          xValueMapper: (SignalChartModel sales, _) => sales.x,
+                          yValueMapper: (SignalChartModel sales, _) => sales.y,
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => start(),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF65B7F3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          child: Text('开始', style: TextStyle(fontSize: 20)),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () => stop(),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFF37370),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          child: Text('停止', style: TextStyle(fontSize: 20)),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: () => setState(() => _dataList.clear()),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF61bd79),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          child: Text('清除', style: TextStyle(fontSize: 20)),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => start(),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF65B7F3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('开始', style: TextStyle(fontSize: 20)),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () => stop(),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFF37370),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('停止', style: TextStyle(fontSize: 20)),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () => setState(() => _dataList.clear()),
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF61bd79),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('清除', style: TextStyle(fontSize: 20)),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Container(
-            child: Column(
-              children: [],
-            ),
-          ),
-        ],
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                height: width * 0.5,
+                width: width * 0.6,
+                padding: EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.7)),
+                child: DefaultTextStyle(
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  child: ValueListenableBuilder<SignalModel>(
+                    valueListenable: _data,
+                    builder: (context, model, _) {
+                      return Text(
+                        'THD: ${model.thd} \nV0: ${model.v0}\nV1: ${model.v1}\nV2: ${model.v2}\nV3: ${model.v3}\nV4: ${model.v4}',
+                      );
+                    },
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -24,12 +24,7 @@ class SignalModel {
   bool operator ==(dynamic other) {
     if (other is! SignalModel) return false;
     SignalModel temp = other;
-    return (temp.thd == thd &&
-        temp.v0 == temp.v0 &&
-        temp.v1 == v1 &&
-        temp.v2 == temp.v2 &&
-        temp.v3 == temp.v3 &&
-        temp.v4 == temp.v4);
+    return (temp.thd == thd && temp.v0 == v0 && temp.v1 == v1 && temp.v2 == v2 && temp.v3 == v3 && temp.v4 == v4);
   }
 }
 
