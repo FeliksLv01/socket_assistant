@@ -176,18 +176,49 @@ class _SignalChartPageState extends State<SignalChartPage> with AfterLayoutMixin
               right: 0,
               top: 0,
               child: Container(
-                height: width * 0.5,
-                width: width * 0.6,
-                padding: EdgeInsets.only(left: 5),
+                width: width * 0.5,
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(color: Colors.grey.withOpacity(0.7)),
                 child: DefaultTextStyle(
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                   child: ValueListenableBuilder<SignalModel>(
                     valueListenable: _data,
                     builder: (context, model, _) {
-                      return Text(
-                        'THD: ${model.thd} \nV0: ${model.v0}\nV1: ${model.v1}\nV2: ${model.v2}\nV3: ${model.v3}\nV4: ${model.v4}',
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text('失真度:'), Text('${model.thd?.toStringAsFixed(2)}%')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text('归一化幅值:'), Text('')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(''), Text('1.000')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(''), Text('${model.v1?.toStringAsFixed(3)}')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(''), Text('${model.v2?.toStringAsFixed(3)}')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(''), Text('${model.v3?.toStringAsFixed(3)}')],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [Text(''), Text('${model.v4?.toStringAsFixed(3)}')],
+                          ),
+                        ],
                       );
+                      // return Text(
+                      //   '失真度: ${model.thd} \n归一化幅值:\n ${model.v0}\n ${model.v1}\n ${model.v2}\n ${model.v3}\n ${model.v4}',
+                      // );
                     },
                   ),
                 ),
