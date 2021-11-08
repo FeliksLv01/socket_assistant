@@ -30,7 +30,6 @@ dependencies:
   syncfusion_flutter_gauges: ^19.1.67
   syncfusion_flutter_charts: ^19.3.48
   sp_util: ^2.0.3
-  permission_handler: ^8.0.1
 
 dev_dependencies:
   flutter_test:
