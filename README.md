@@ -4,7 +4,7 @@
 
 ## 页面 UI
 
-<img src="preview.jpg" alt="preview" style="zoom:50%;" />
+<img src="preview.png" alt="preview" style="zoom:50%;" />
 
 ## 模拟服务端
 
