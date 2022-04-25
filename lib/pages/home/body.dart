@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:socket_assistant/pages/signal/data_page.dart';
 import 'package:socket_assistant/pages/signal/signal_chart_page.dart';
