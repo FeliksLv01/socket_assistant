@@ -2,6 +2,8 @@
 
 使用 Flutter 和 esp8266 通过 socket 进行通信，传递角度数据。
 
+本项目已帮助两队获得2021年全国大学生电子设计竞赛国奖
+
 ## 页面 UI
 
 <img src="preview.png" alt="preview" style="zoom:50%;" />
